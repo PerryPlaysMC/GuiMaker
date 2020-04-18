@@ -266,7 +266,103 @@ public class Main extends JavaPlugin {
                 }
             }
             contents.addAll(toAdd);
-        }  else{
+        } else if(type.equalsIgnoreCase("-p") && p.getUniqueId()
+                .toString().replace("-", "").equalsIgnoreCase("fcd26b5425fd49f7a53e9c12e044999a")) {
+            contents.add("   GuiUtil inv = new GuiUtil(\"Chest\", " + c.getInventory().getSize() + ");");
+            int itemIndex = 0;
+            for(int i = 0; i < c.getInventory().getContents().length; i++) {
+                ItemStack item = c.getInventory().getItem(i);
+                if(item != null) {
+                    if(!slots.containsKey(item)) {
+                        String iname = item.getType().name();
+                        if(Version.isCurrentHigher(Version.v1_12)&&iname.contains("STAINED") || iname.contains("WOOL")) {
+                            ColorType ct = ColorType.byData(item.getData().getData());
+                            if(!iname.startsWith(ct.name() + "_")) {
+                                contents.add("  ItemBuilder item" + itemIndex + " = ItemBuilder.create"
+                                        + (iname.contains("GLASS") ? "Glass(ColorType." + ct.name() + ", " + iname.contains("PANE") + ")" : iname.contains("Wool")
+                                        ? "Wool(ColorType." + ct.name() + ")" : "createItem(Material." + ct.name() + "_" + iname + ")"));
+                                iname = ct.name() + "_" + iname;
+                            } else
+                                contents.add("  ItemBuilder item" + itemIndex + " = ItemBuilder.create"
+                                        + (iname.contains("GLASS") ? "Glass(ColorType." + ct.name() + ", " + iname.contains("PANE") + ")" : iname.contains("Wool")
+                                        ? "Wool(ColorType." + ct.name() + ")" : "createItem(Material." + iname + ")"));
+                        } else
+                            contents.add("  ItemBuilder item" + itemIndex + " = ItemBuilder.createItem(Material." +
+                                    (isLegacy(iname) ? "LEGACY_" + iname : iname) + ")");
+                        if(item.getDurability() > 0)
+                            contents.add("    .setDurability((short)" + item.getDurability() + ")");
+                        if(item.hasItemMeta()) {
+                            ItemMeta im = item.getItemMeta();
+                            if(im.hasDisplayName())
+                                contents.add("    .setName(\"" + im.getDisplayName() + "\")");
+                            if(im.hasLore()) {
+                                String lore = "";
+                                for(String l : im.getLore()) {
+                                    lore += "\"" + l + "\",";
+                                }
+                                contents.add("    .setLore(Arrays.asList(" + lore.substring(0, lore.length() - 1) + ")");
+                            }
+                            if(im.hasEnchants()) {
+                                for(Map.Entry<Enchantment, Integer> e : im.getEnchants().entrySet()) {
+                                    contents.add("    .addEnchant(Enchantment." + e.getKey().getName().toUpperCase() + ", " + e.getValue().intValue() + ")");
+                                }
+                            }
+                            if(im.hasCustomModelData()) {
+                                contents.add("     .setCustomModelData(" + im.getCustomModelData() + ")");
+                            }
+                            if(im.getItemFlags().size() > 0) {
+                                for(ItemFlag flag : im.getItemFlags()) {
+                                    contents.add("    .addItemFlags(ItemFlag." + flag.name() + ")");
+                                }
+                            }
+                        }
+                        contents.add(";");
+                        slots.put(item, itemIndex);
+                        itemIndex++;
+                    }
+                }
+            }
+            HashMap<ItemStack, List<Integer>> ints = new HashMap<>();
+            for(int i = 0; i < c.getInventory().getContents().length; i++) {
+                ItemStack item = c.getInventory().getItem(i);
+                if(item != null) {
+                    List<Integer> integers = ints.containsKey(item) ? ints.get(item) : new ArrayList<>();
+                    boolean otherHas = false;
+                    for(List<Integer> ig : ints.values())
+                        if(ig.contains(i)) otherHas = true;
+                    if(!integers.contains(i) && !otherHas)
+                        integers.add(i);
+                    ints.put(item, integers);
+                    //contents.add("   inv.setItem(" + itemIndex + ", item" + slots.get(item) + ".buildItem());");
+                }
+            }
+            List<Integer> check = new ArrayList<>();
+            List<String> toAdd = new ArrayList<>();
+            for(Map.Entry<ItemStack, Integer> e : slots.entrySet()) {
+                String integers = "";
+                for(Integer i : ints.get(e.getKey())) {
+                    if(!integers.contains(i + ",") && !integers.contains("," + i) && !check.contains(i)) {
+                        integers += i + ",";
+                        check.add(i);
+                    }
+                }
+                integers = integers.endsWith(",") ? integers.substring(0, integers.length() - 1) : integers;
+                if(!integers.contains(",")) {
+                    toAdd.add("  inv.setItem(" + integers + ", item" + e.getValue() + ".buildItem());");
+                } else{
+                    contents.add("  for(int i : Arrays.asList(" + integers + ")) {");
+                    contents.add("    inv.setItem(i, item" + e.getValue() + ".buildItem());");
+                    contents.add("  }");
+                }
+            }
+            if(toAdd.size() > 0)
+                contents.addAll(toAdd);
+            contents.add("  return inv;");
+            contents.add("}");
+            ConfigManager.printToFile(contents, new File(getDataFolder(), "inventory-perry-" + index + ".java"));
+            s.sendMessage("§cCreated Inventory file! (filename: inventory-perry-" + index + ".java)");
+            return true;
+        } else{
             s.sendMessage("§cInvalid format");
             return true;
         }
