@@ -1,0 +1,10 @@
+name: 'GuiMaker'
+version: 'v1'
+main: 'dev.perryplaysmc.Main'
+author: PerryPlaysMC
+description: 'Creates a file with inventory data'
+api-version: 1.13
+
+commands:
+  makegui:
+    description: 'Makes chest contents into a gui in a .txt file'

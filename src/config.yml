@@ -1,0 +1,41 @@
+formats:
+  Development:
+    itemclassName: 'ItemBuilder'
+    creation:
+      #constructor, #.methodname
+      name: '.createItem'
+      #Type=MaterialType, Amount=Integer, Data=Short
+      parameters: 'item.getType()'
+    setAmount:
+      name: 'setAmount'
+      #Amount=Integer
+      parameters: 'item.getAmount()'
+    setDisplayName:
+      name: 'setName'
+      #item.<Method>, itemMeta.<Method>
+      parameters: 'itemMeta.getDisplayName()'
+    setData:
+      name: 'setData'
+      #item.<Method>, itemMeta.<Method>
+      parameters: 'item.getMaterialData()'
+    setLore:
+      name: 'setLore'
+      #item.<Method>, itemMeta.<Method>
+      parameters: 'itemMeta.getLore()'
+    setCustomModelData:
+      name: 'setCustomModelData'
+      #item.<Method>, itemMeta.<Method>
+      parameters: 'itemMeta.getCustomModelData()'
+    addEnchants:
+      name: 'addEnchant'
+      #enchant.getEnchant(), enchant.getLevel()
+      parameters: 'enchant.getEnchant(), enchant.getLevel()'
+    addItemFlags:
+      name: 'addItemFlags'
+      #flag
+      parameters: 'flag'
+    build:
+      name: 'buildItem'
+      #item.<Method>, itemMeta.<Method>
+      parameters: ''
+
