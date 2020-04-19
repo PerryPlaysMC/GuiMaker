@@ -8,3 +8,6 @@ api-version: 1.13
 commands:
   makegui:
     description: 'Makes chest contents into a gui in a .txt file'
+  edititem:
+    description: 'Easily edit an item''s Name/Lore'
+    aliases: ['ei', 'itemedit', 'ie', 'editi', 'iedit', 'iteme']

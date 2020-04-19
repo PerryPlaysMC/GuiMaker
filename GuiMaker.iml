@@ -17,5 +17,6 @@
       </library>
     </orderEntry>
     <orderEntry type="library" name="spigot-latest" level="application" />
+    <orderEntry type="library" name="lombok" level="application" />
   </component>
 </module>
