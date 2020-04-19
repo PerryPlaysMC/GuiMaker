@@ -4,12 +4,15 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * Copy Right ©
@@ -25,7 +28,7 @@ import java.util.Collections;
  **/
 
 @SuppressWarnings("all")
-public class CommandEditItem implements CommandExecutor {
+public class CommandEditItem implements CommandExecutor, TabCompleter {
 
 
     @Override
@@ -35,6 +38,10 @@ public class CommandEditItem implements CommandExecutor {
             return true;
         }
         Player p = (Player) s;
+        if(!s.hasPermission("edititem.use")) {
+            s.sendMessage("§cYou do not have permission for this command.");
+            return true;
+        }
         if(args.length < 2 || (!args[0].equalsIgnoreCase("name")&&!args[0].equalsIgnoreCase("lore"))) {
             s.sendMessage("§a§l§m-------§r§2[§e§lGuiMaker§2]§a§l§m-------");
             s.sendMessage("§a/§eitemedit §2name <Name>");
@@ -42,7 +49,7 @@ public class CommandEditItem implements CommandExecutor {
             return true;
         }
         if(args[0].equalsIgnoreCase("name")) {
-            if(p.getItemInHand()==null||!(p.getItemInHand().getType().name().endsWith("AIR") && !p.getItemInHand().getType().name().endsWith("AIRS"))) {
+            if(p.getItemInHand()==null||(p.getItemInHand().getType().name().endsWith("AIR") && !p.getItemInHand().getType().name().endsWith("AIRS"))) {
                 s.sendMessage("§cItem cannot be air. Please hold the item you would like to rename");
                 return true;
             }
@@ -50,17 +57,17 @@ public class CommandEditItem implements CommandExecutor {
             for(int i = 1; i < args.length; i++) {
                 name+=args[i]+" ";
             }
-            name = name.trim();
+            name = ChatColor.translateAlternateColorCodes('&', name.trim());
             ItemStack item = p.getItemInHand();
             ItemMeta im = item.getItemMeta();
-            im.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));
+            im.setDisplayName(name);
             item.setItemMeta(im);
             p.setItemInHand(item);
             s.sendMessage("§aName set: §2" + name);
             return true;
         }
         if(args[0].equalsIgnoreCase("lore")) {
-            if(p.getItemInHand()==null||!(p.getItemInHand().getType().name().endsWith("AIR") && !p.getItemInHand().getType().name().endsWith("AIRS"))) {
+            if(p.getItemInHand()==null||(p.getItemInHand().getType().name().endsWith("AIR") && !p.getItemInHand().getType().name().endsWith("AIRS"))) {
                 s.sendMessage("§cItem cannot be air. Please hold the item you would like to relore");
                 return true;
             }
@@ -68,7 +75,7 @@ public class CommandEditItem implements CommandExecutor {
             for(int i = 1; i < args.length; i++) {
                 lore+=args[i]+" ";
             }
-            lore = lore.trim().replace("\\n", "\n").replace("\n", "\n");
+            lore = ChatColor.translateAlternateColorCodes('&', lore).trim().replace("\\n", "\n").replace("\n", "\n");
             ItemStack item = p.getItemInHand();
             ItemMeta im = item.getItemMeta();
             im.setLore(Collections.singletonList(lore));
@@ -78,5 +85,16 @@ public class CommandEditItem implements CommandExecutor {
             return true;
         }
         return true;
+    }
+
+    @Override
+    public List<String> onTabComplete( CommandSender s,  Command command,  String cl, String[] args) {
+        List<String> f = new ArrayList<>();
+        List<String> t = Arrays.asList("name", "lore");
+        if(args.length == 1 && s.hasPermission("edititem.use"))
+            for(String s1 : t)
+                if(s1.toLowerCase().startsWith(args[0].toLowerCase())) f.add(s1);
+
+        return f;
     }
 }

@@ -1,5 +1,5 @@
 name: 'GuiMaker'
-version: 'v1'
+version: 'v2.0'
 main: 'dev.perryplaysmc.Main'
 author: PerryPlaysMC
 description: 'Creates a file with inventory data'

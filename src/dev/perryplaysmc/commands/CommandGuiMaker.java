@@ -11,6 +11,7 @@ import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -22,10 +23,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Copy Right ©
@@ -41,9 +39,21 @@ import java.util.Map;
  **/
 
 @SuppressWarnings("all")
-public class CommandGuiMaker implements CommandExecutor {
+public class CommandGuiMaker implements CommandExecutor, TabCompleter {
 
     Main plugin = Main.getInstance();
+
+
+    @Override
+    public List<String> onTabComplete( CommandSender s,  Command command,  String cl, String[] args) {
+        List<String> f = new ArrayList<>();
+        List<String> t = new ArrayList<>(plugin.getConfig().getConfigurationSection("formats").getKeys(false));
+        if(args.length == 1 && s.hasPermission("edititem.use"))
+            for(String s1 : t)
+                if(s1.toLowerCase().startsWith(args[0].toLowerCase())) f.add(s1);
+
+        return f;
+    }
 
     @Override
     public boolean onCommand(CommandSender s, Command command, String cl, String[] args) {
@@ -55,7 +65,7 @@ public class CommandGuiMaker implements CommandExecutor {
             return true;
         }
         if(!s.hasPermission("guimaker.create") && !s.isOp()) {
-            s.sendMessage("§cYou do not have permission for this");
+            s.sendMessage("§cYou do not have permission for this command");
             return true;
         }
         Player p = (Player) s;
@@ -263,8 +273,7 @@ public class CommandGuiMaker implements CommandExecutor {
                 }
             }
             contents.addAll(toAdd);
-        }
-        else{
+        }else{
             s.sendMessage("§cInvalid format");
             return true;
         }
