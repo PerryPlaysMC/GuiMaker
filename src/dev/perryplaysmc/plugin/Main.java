@@ -1,7 +1,7 @@
-package dev.perryplaysmc;
+package dev.perryplaysmc.plugin;
 
-import dev.perryplaysmc.commands.CommandEditItem;
-import dev.perryplaysmc.commands.CommandGuiMaker;
+import dev.perryplaysmc.plugin.commands.CommandEditItem;
+import dev.perryplaysmc.plugin.commands.CommandGuiMaker;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.bukkit.Bukkit;
@@ -15,7 +15,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  * Package: dev.perryplaysmc
  * Class: Main
  * <p>
- * Path: dev.perryplaysmc.Main
+ * Path: dev.perryplaysmc.plugin.Main
  * <p>
  * Any attempts to use these program(s) may result in a penalty of up to $1,000 USD
  **/

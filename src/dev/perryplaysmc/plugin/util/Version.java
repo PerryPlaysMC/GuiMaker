@@ -1,4 +1,4 @@
-package dev.perryplaysmc.util;
+package dev.perryplaysmc.plugin.util;
 
 import org.bukkit.Bukkit;
 
@@ -10,8 +10,8 @@ public enum Version {
     v1_12(1120), v1_12_R1(1121),
     v1_13(1130), v1_13_R1(1131), v1_13_R2(1132),
     v1_14(1140), v1_14_R1(1141),
-    v1_15(1150), v1_15_R1(1151), NULL(-1);
-    static Version current = NULL, exact = NULL;
+    v1_15(1150), v1_15_R1(1151), UNKNOWN(-1);
+    static Version current = UNKNOWN, exact = UNKNOWN;
     private int ver;
     Version(int ver) {
         this.ver = ver;
@@ -40,12 +40,12 @@ public enum Version {
     }
 
     public static Version getCurrentVersionExact() {
-        if(exact!=NULL) {
+        if(exact!=UNKNOWN) {
             return exact;
         }
         String pack =  Bukkit.getServer().getClass().getPackage().getName();
         String version = pack.substring(pack.lastIndexOf('.')+1).replaceFirst("v", "");
-        Version ret = NULL;
+        Version ret = UNKNOWN;
         switch(version) {
             case "1_8_R1": {
                 ret = v1_8_R1;
@@ -85,17 +85,17 @@ public enum Version {
                 break;
             }
         }
-        if(exact==NULL || exact!=ret) exact = ret;
+        if(exact==UNKNOWN || exact!=ret) exact = ret;
         return ret;
     }
 
     public static Version getCurrentVersion() {
-        if(current!=NULL) {
+        if(current!=UNKNOWN) {
             return current;
         }
         String pack =  Bukkit.getServer().getClass().getPackage().getName();
         String version = pack.substring(pack.lastIndexOf('.')+1).replaceFirst("v", "");
-        Version ret = NULL;
+        Version ret = UNKNOWN;
         switch(version) {
             case "1_8_R1":
             case "1_8_R2":
@@ -130,7 +130,7 @@ public enum Version {
                 break;
             }
         }
-        if(current == NULL||current!=ret) current = ret;
+        if(current == UNKNOWN||current!=ret) current = ret;
         return ret;
     }
 

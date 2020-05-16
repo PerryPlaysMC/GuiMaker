@@ -1,6 +1,6 @@
 name: 'GuiMaker'
 version: 'v2.0'
-main: 'dev.perryplaysmc.Main'
+main: 'dev.perryplaysmc.plugin.Main'
 author: PerryPlaysMC
 description: 'Creates a file with inventory data'
 api-version: 1.13

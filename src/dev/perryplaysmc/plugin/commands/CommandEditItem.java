@@ -1,4 +1,4 @@
-package dev.perryplaysmc.commands;
+package dev.perryplaysmc.plugin.commands;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -31,7 +31,7 @@ import java.util.List;
 public class CommandEditItem implements CommandExecutor, TabCompleter {
 
 
-    @Override
+    @Override@SuppressWarnings("all")
     public boolean onCommand(CommandSender s, Command command, String cl, String[] args) {
         if(!(s instanceof CommandSender)) {
             s.sendMessage("§cPlayers only, sorry. (not sorry)");

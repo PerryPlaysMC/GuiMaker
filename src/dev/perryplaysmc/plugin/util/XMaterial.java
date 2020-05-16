@@ -1,4 +1,4 @@
-package dev.perryplaysmc.util;
+package dev.perryplaysmc.plugin.util;
 
 import java.util.HashMap;
 
@@ -881,6 +881,7 @@ public enum XMaterial {
     }
 
     private static HashMap<String, XMaterial> cachedSearch = new HashMap<>();
+
     public static XMaterial requestXMaterial(String name, byte data){
         if(cachedSearch.containsKey(name.toUpperCase()+","+data)){
             return cachedSearch.get(name.toUpperCase()+","+data);

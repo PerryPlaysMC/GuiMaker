@@ -1,10 +1,10 @@
-package dev.perryplaysmc.commands;
+package dev.perryplaysmc.plugin.commands;
 
-import dev.perryplaysmc.Main;
-import dev.perryplaysmc.util.ColorType;
-import dev.perryplaysmc.util.ConfigManager;
-import dev.perryplaysmc.util.Version;
-import dev.perryplaysmc.util.XMaterial;
+import dev.perryplaysmc.plugin.Main;
+import dev.perryplaysmc.plugin.util.ColorType;
+import dev.perryplaysmc.plugin.util.ConfigManager;
+import dev.perryplaysmc.plugin.util.Version;
+import dev.perryplaysmc.plugin.util.XMaterial;
 import org.bukkit.Material;
 import org.bukkit.Nameable;
 import org.bukkit.block.Block;
@@ -19,7 +19,6 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -124,9 +123,10 @@ public class CommandGuiMaker implements CommandExecutor, TabCompleter {
                                     contents.add("      im" + itemIndex + ".addEnchant(Enchantment." + e.getKey().getName().toUpperCase() + ", " + e.getValue().intValue() + ", true);");
                                 }
                             }
-                            if(im.hasCustomModelData()) {
-                                contents.add("      im" + itemIndex + ".setCustomModelData(" + im.getCustomModelData() + ");");
-                            }
+                            if(Version.isCurrentHigher(Version.v1_8))
+                                if(im.hasCustomModelData()) {
+                                    contents.add("      im" + itemIndex + ".setCustomModelData(" + im.getCustomModelData() + ");");
+                                }
                             if(im.getItemFlags().size() > 0) {
                                 for(ItemFlag flag : im.getItemFlags()) {
                                     contents.add("      im" + itemIndex + ".addItemFlags(ItemFlag." + flag.name() + ");");
@@ -205,9 +205,10 @@ public class CommandGuiMaker implements CommandExecutor, TabCompleter {
                             if(im.hasLore() && !sec.getString("setLore.name").isEmpty())
                                 contents.add("    item" + itemIndex + "." + sec.getString("setLore.name") +
                                         "(" + toString(getFromParametersString(item, sec.getString("setLore.parameters"))) + ");");
-                            if(im.hasCustomModelData() && !sec.getString("setCustomModelData.name").isEmpty())
-                                contents.add("    item" + itemIndex + "." + sec.getString("setCustomModelData.name") +
-                                        "(" + toString(getFromParametersString(item, sec.getString("setLore.parameters"))) + ");");
+                            if(Version.isCurrentHigher(Version.v1_8))
+                                if(im.hasCustomModelData() && !sec.getString("setCustomModelData.name").isEmpty())
+                                    contents.add("    item" + itemIndex + "." + sec.getString("setCustomModelData.name") +
+                                            "(" + toString(getFromParametersString(item, sec.getString("setLore.parameters"))) + ");");
                             if(im.hasEnchants() && !sec.getString("addEnchants.name").isEmpty())
                                 for(Map.Entry<Enchantment, Integer> e : im.getEnchants().entrySet()) {
                                     contents.add("    item" + itemIndex + "." + sec.getString("addEnchants.name") +

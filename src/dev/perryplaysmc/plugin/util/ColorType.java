@@ -1,4 +1,4 @@
-package dev.perryplaysmc.util;
+package dev.perryplaysmc.plugin.util;
 
 import java.util.Random;
 
@@ -46,7 +46,7 @@ public enum ColorType {
         for(ColorType t : values()) {
             if(t.getData()==(short)data)return t;
         }
-        return ColorType.WHITE;
+        return WHITE;
     }
 
     public static ColorType random() {
